@@ -34,29 +34,15 @@ const loadLocalEnv = () => {
 loadLocalEnv();
 
 const getDatabaseConfig = (): TypeOrmModuleOptions => {
-  const dbType = process.env.DB_TYPE ?? 'sqlite';
-
-  if (dbType === 'sqlite') {
-    return {
-      type: 'sqlite',
-      database: process.env.SQLITE_DATABASE ?? 'nays-car.sqlite',
-      autoLoadEntities: true,
-      synchronize: process.env.DB_SYNCHRONIZE !== 'false',
-    };
-  }
-
   return {
     type: 'mysql',
-    host: process.env.DB_HOST ?? '127.0.0.1',
-    port: Number(process.env.DB_PORT ?? 3306),
-    username: process.env.DB_USERNAME ?? 'root',
-    password: process.env.DB_PASSWORD ?? '',
-    database: process.env.DB_DATABASE ?? 'car_rental',
+    host: process.env.MYSQLHOST,
+    port: parseInt(process.env.MYSQLPORT || '3306', 10),
+    username: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE,
     autoLoadEntities: true,
-    synchronize: process.env.DB_SYNCHRONIZE !== 'false',
-    connectTimeout: Number(process.env.DB_CONNECT_TIMEOUT ?? 5000),
-    retryAttempts: Number(process.env.DB_RETRY_ATTEMPTS ?? 3),
-    retryDelay: Number(process.env.DB_RETRY_DELAY ?? 1000),
+    synchronize: true,
   };
 };
 

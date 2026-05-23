@@ -30,10 +30,10 @@ export class Car {
   @Column({ default: 0 })
   price: number;
 
-  @Column({ type: 'longtext', nullable: true })
+  @Column({ type: 'text', nullable: true })
   image: string | null;
 
-  @Column({ type: 'longtext', nullable: true, transformer: carImagesTransformer })
+  @Column({ type: 'text', nullable: true, transformer: carImagesTransformer })
   images: string[] | null;
 
   @OneToMany(() => Booking, (booking) => booking.car)
