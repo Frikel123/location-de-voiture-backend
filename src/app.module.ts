@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { getDatabaseConfig } from './database.config';
 import { CarsModule } from './cars/cars.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { AuthModule } from './auth/auth.module';
@@ -32,19 +33,6 @@ const loadLocalEnv = () => {
 };
 
 loadLocalEnv();
-
-const getDatabaseConfig = (): TypeOrmModuleOptions => {
-  return {
-    type: 'mysql',
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT || '3306', 10),
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    autoLoadEntities: true,
-    synchronize: true,
-  };
-};
 
 @Module({
   imports: [
