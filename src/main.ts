@@ -9,16 +9,10 @@ async function bootstrap() {
   app.use(json({ limit: '5mb' }));
   app.use(urlencoded({ extended: true, limit: '5mb' }));
 
-  const allowedOrigins = (process.env.CORS_ORIGIN || process.env.FRONTEND_URL || '*')
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean);
-
   app.enableCors({
-    origin: allowedOrigins.includes('*') ? true : allowedOrigins,
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Authorization',
-    credentials: false,
+    credentials: true,
   });
 
   app.useGlobalPipes(
@@ -29,8 +23,8 @@ async function bootstrap() {
   );
 
   const port = process.env.PORT || 3000;
-  await app.listen(port);
-  console.log(`NAYS CAR API running on port ${port}`);
+  await app.listen(port, '0.0.0.0');
+  console.log(`NAYS CAR API running on http://localhost:${port}`);
 }
 
 bootstrap();
