@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Car } from './cars.entity';
 import { In, Repository } from 'typeorm';
@@ -7,6 +7,8 @@ import { Contract } from '../contracts/contract.entity';
 
 @Injectable()
 export class CarsService {
+  private readonly logger = new Logger(CarsService.name);
+
   constructor(
     @InjectRepository(Car)
     private carRepo: Repository<Car>,
@@ -44,15 +46,46 @@ export class CarsService {
     return car;
   }
    
-  create(data: Partial<Car>) {
-    const car = this.carRepo.create(this.normalizeImages(data));
-    return this.carRepo.save(car);
+  async create(data: Partial<Car>) {
+    try {
+      const normalizedData = this.normalizeImages(data);
+      const car = this.carRepo.create(normalizedData);
+      const savedCar = await this.carRepo.save(car);
+
+      this.logger.log(
+        `Created car ${savedCar.id}: name=${savedCar.name}, imageBytes=${
+          savedCar.image ? Buffer.byteLength(savedCar.image, 'utf8') : 0
+        }`,
+      );
+
+      return savedCar;
+    } catch (error) {
+      this.logger.error(
+        `Failed to create car: name=${data?.name ?? '[missing]'}, imageBytes=${
+          typeof data?.image === 'string' ? Buffer.byteLength(data.image, 'utf8') : 0
+        }`,
+        (error as Error).stack,
+      );
+      throw new InternalServerErrorException('Failed to create car');
+    }
   }
 
   async update(id: number, data: Partial<Car>) {
-    const car = await this.carRepo.preload({ id, ...this.normalizeImages(data) });
-    if (!car) throw new NotFoundException('Car not found');
-    return this.carRepo.save(car);
+    try {
+      const car = await this.carRepo.preload({ id, ...this.normalizeImages(data) });
+      if (!car) throw new NotFoundException('Car not found');
+      return await this.carRepo.save(car);
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+
+      this.logger.error(
+        `Failed to update car ${id}: imageBytes=${
+          typeof data?.image === 'string' ? Buffer.byteLength(data.image, 'utf8') : 0
+        }`,
+        (error as Error).stack,
+      );
+      throw new InternalServerErrorException('Failed to update car');
+    }
   }
 
   async delete(id: number) {
