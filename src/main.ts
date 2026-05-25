@@ -1,3 +1,4 @@
+import { App } from 'supertest/types';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { json, urlencoded } from 'express';
@@ -15,6 +16,8 @@ async function bootstrap() {
     'http://localhost:5173',
     'http://localhost:3000'
   ],
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+
   credentials: true,
 });
 
