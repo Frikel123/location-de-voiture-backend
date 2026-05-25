@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuard
 import { ContractsService } from './contracts.service';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
-import { JwtAuthGuard } from '../jwt-auth.guard';
+// import { JwtAuthGuard } from '../jwt-auth.guard';
 
 @Controller('contracts')
 export class ContractsController {
