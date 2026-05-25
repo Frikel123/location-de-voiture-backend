@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Logger, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { CarsService } from './cars.service';
-import { JwtAuthGuard } from 'src/jwt-auth.guard';
+// import { JwtAuthGuard } from 'src/jwt-auth.guard';
 
 @Controller('cars')
 export class CarsController {
