@@ -18,13 +18,13 @@ export class BookingsController {
     return this.bookingsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Put(':id')
   update(@Param('id') id: string, @Body() body: UpdateBookingDto) {
     return this.bookingsService.update(+id, body);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.bookingsService.delete(+id);

@@ -20,25 +20,25 @@ export class ContractsController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.contractsService.findOne(id);
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   create(@Body() createContractDto: CreateContractDto) {
     return this.contractsService.create(createContractDto);
   }
 
   @Put(':id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   update(@Param('id', ParseIntPipe) id: number, @Body() updateContractDto: UpdateContractDto) {
     return this.contractsService.update(id, updateContractDto);
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.contractsService.remove(id);
   }

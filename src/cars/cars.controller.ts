@@ -18,7 +18,7 @@ export class CarsController {
     return this.carsService.findOne(+id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() body: any) {
     this.logger.log(
@@ -29,7 +29,7 @@ export class CarsController {
     return this.carsService.create(body);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Put(':id')
   update(@Param('id') id: string, @Body() body: any) {
     this.logger.log(
@@ -40,7 +40,7 @@ export class CarsController {
     return this.carsService.update(+id, body);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.carsService.delete(+id);
