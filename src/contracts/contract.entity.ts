@@ -122,6 +122,9 @@ export class Contract {
   @Column({ type: 'text', nullable: true })
   signatureAdmin: string;
 
+  @Column({ type: 'longtext', nullable: true })
+  signature: string;
+
   @Column({ type: 'text', nullable: true, name: 'client_signature' })
   clientSignature: string;
 

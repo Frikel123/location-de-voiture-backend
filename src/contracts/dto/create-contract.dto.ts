@@ -165,6 +165,10 @@ export class CreateContractDto {
 
   @IsOptional()
   @IsString()
+  signature?: string;
+
+  @IsOptional()
+  @IsString()
   clientSignature?: string;
 
   @IsOptional()

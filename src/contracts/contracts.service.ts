@@ -11,18 +11,18 @@ const buildContractToken = (contractNumber: string) =>
     : `NC-${Date.now()}`;
 
 const buildContractQrUrl = (contractNumber: string) => {
-  const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'http://192.168.1.8:8080';
+  const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'https://carsatlas.netlify.app';
   return `${publicUrl.replace(/\/$/, '')}/contracts/verify/${encodeURIComponent(contractNumber)}`;
 };
 
 const normalizeContractData = (data: CreateContractDto | UpdateContractDto) => {
-  const signatureClient = data.signatureClient || data.clientSignature;
+  const signatureClient = data.signature || data.signatureClient || data.clientSignature;
   const signatureAdmin = data.signatureAdmin || data.agencySignature;
   const qrUrl = data.qrUrl || data.qrCode || (data.contractNumber ? buildContractQrUrl(data.contractNumber) : undefined);
 
   return {
     ...data,
-    ...(signatureClient ? { signatureClient, clientSignature: signatureClient } : {}),
+    ...(signatureClient ? { signature: signatureClient, signatureClient, clientSignature: signatureClient } : {}),
     ...(signatureAdmin ? { signatureAdmin, agencySignature: signatureAdmin } : {}),
     ...(qrUrl ? { qrUrl, qrCode: qrUrl } : {}),
   };
