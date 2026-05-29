@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Req, UseGuards } from '@nestjs/common';
+import type { Request } from 'express';
 import { ContractsService } from './contracts.service';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
@@ -17,6 +18,18 @@ export class ContractsController {
   @Get('verify/:contractNumber')
   verify(@Param('contractNumber') contractNumber: string) {
     return this.contractsService.findByContractNumber(contractNumber);
+  }
+
+  @Get('signature/:id')
+  findPublicSignatureContract(@Param('id') id: string) {
+    return this.contractsService.findByContractNumber(id);
+  }
+
+  @Post('signature/:id')
+  sign(@Param('id') id: string, @Body('signature') signature: string, @Req() request: Request) {
+    const forwardedFor = request.headers['x-forwarded-for'];
+    const ipAddress = Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor?.split(',')[0]?.trim();
+    return this.contractsService.sign(id, signature, ipAddress || request.ip);
   }
 
   @Get(':id')

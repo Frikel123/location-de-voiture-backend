@@ -153,6 +153,14 @@ export class CreateContractDto {
 
   @IsOptional()
   @IsString()
+  signatureIp?: string;
+
+  @IsOptional()
+  @IsString()
+  signatureStatus?: string;
+
+  @IsOptional()
+  @IsString()
   notes?: string;
 
   @IsOptional()

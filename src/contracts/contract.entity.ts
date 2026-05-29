@@ -113,6 +113,12 @@ export class Contract {
   @Column({ nullable: true })
   signedAt: string;
 
+  @Column({ nullable: true })
+  signatureIp: string;
+
+  @Column({ nullable: true })
+  signatureStatus: string;
+
   @Column({ type: 'text', nullable: true })
   notes: string;
 

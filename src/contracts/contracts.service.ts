@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateContractDto } from './dto/create-contract.dto';
@@ -12,8 +12,11 @@ const buildContractToken = (contractNumber: string) =>
 
 const buildContractQrUrl = (contractNumber: string) => {
   const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'https://carsatlas.netlify.app';
-  return `${publicUrl.replace(/\/$/, '')}/contracts/verify/${encodeURIComponent(contractNumber)}`;
+  return `${publicUrl.replace(/\/$/, '')}/signature/${encodeURIComponent(contractNumber)}`;
 };
+
+const isSignatureImage = (value?: string) =>
+  Boolean(value && /^data:image\/(png|jpeg|jpg);base64,/i.test(value) && value.length <= 2_500_000);
 
 const normalizeContractData = (data: CreateContractDto | UpdateContractDto) => {
   const signatureClient = data.signature || data.signatureClient || data.clientSignature;
@@ -49,7 +52,7 @@ export class ContractsService {
 
   async findByContractNumber(contractNumber: string): Promise<Contract> {
     const contract = await this.contractRepository.findOne({
-      where: [{ contractToken: contractNumber }, { contractNumber }],
+      where: [{ contractToken: contractNumber }, { contractNumber }, { id: Number(contractNumber) || 0 }],
     });
     if (!contract) {
       throw new NotFoundException('Contrat introuvable');
@@ -68,6 +71,36 @@ export class ContractsService {
       qrUrl,
       qrCode: qrUrl,
     });
+    return this.contractRepository.save(contract);
+  }
+
+  async sign(idOrToken: string, signature: string, ipAddress?: string): Promise<Contract> {
+    if (!isSignatureImage(signature)) {
+      throw new BadRequestException('Signature invalide');
+    }
+
+    const contract = await this.contractRepository.findOne({
+      where: [{ contractToken: idOrToken }, { contractNumber: idOrToken }, { id: Number(idOrToken) || 0 }],
+    });
+
+    if (!contract) {
+      throw new NotFoundException('Contrat introuvable');
+    }
+
+    if (contract.signatureStatus === 'signed' || contract.status === 'Signé') {
+      return contract;
+    }
+
+    const signedAt = new Date().toISOString();
+    contract.signature = signature;
+    contract.signatureClient = signature;
+    contract.clientSignature = signature;
+    contract.signedAt = signedAt;
+    contract.signatureIp = ipAddress || '';
+    contract.signatureStatus = 'signed';
+    contract.status = 'Signé';
+    contract.contractStatus = 'Signé';
+
     return this.contractRepository.save(contract);
   }
 

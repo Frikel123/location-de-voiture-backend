@@ -61,7 +61,7 @@ export class BookingsService {
 
   private buildContractQrUrl(contractNumber: string) {
     const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'http://192.168.1.8:8080';
-    return `${publicUrl.replace(/\/$/, '')}/contracts/verify/${encodeURIComponent(contractNumber)}`;
+    return `${publicUrl.replace(/\/$/, '')}/signature/${encodeURIComponent(contractNumber)}`;
   }
 
   private splitCarName(carName: string) {
