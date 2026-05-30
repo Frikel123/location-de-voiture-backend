@@ -8,7 +8,7 @@ import { Contract } from './contract.entity';
 const buildContractToken = (contractNumber: string) =>
   contractNumber
     ? contractNumber.trim().replace(/[^a-zA-Z0-9-]/g, '-')
-    : `NC-${Date.now()}`;
+    : `AC-${Date.now()}`;
 
 const buildContractQrUrl = (contractNumber: string) => {
   const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'https://carsatlas.netlify.app';
@@ -87,7 +87,7 @@ export class ContractsService {
       throw new NotFoundException('Contrat introuvable');
     }
 
-    if (contract.signatureStatus === 'signed' || contract.status === 'Signé') {
+    if (contract.signatureStatus === 'signed' || contract.status === 'Signé' || contract.status === 'SignÃ©') {
       return contract;
     }
 
