@@ -10,17 +10,18 @@ async function bootstrap() {
   app.use(urlencoded({ extended: true, limit: '25mb' }));
 
   const frontendPublicUrl = process.env.FRONTEND_PUBLIC_URL;
-  app.enableCors({
-    origin: [
-      'https://carsatlas.netlify.app',
-      'http://localhost:5173',
-      'http://localhost:8080',
-      ...(frontendPublicUrl ? [frontendPublicUrl.replace(/\/$/, '')] : []),
-    ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type,Authorization',
-    credentials: true,
-  });
+ app.enableCors({
+  origin: [
+    'https://carsatlas.netlify.app',
+    'https://n1luxcars.netlify.app',
+    'http://localhost:5173',
+    'http://localhost:8080',
+    ...(frontendPublicUrl ? [frontendPublicUrl.replace(/\/$/, '')] : []),
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true,
+});
 
   app.useGlobalPipes(
     new ValidationPipe({
