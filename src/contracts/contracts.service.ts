@@ -8,11 +8,11 @@ import { Contract } from './contract.entity';
 const buildContractToken = (contractNumber: string) =>
   contractNumber
     ? contractNumber.trim().replace(/[^a-zA-Z0-9-]/g, '-')
-    : `AC-${Date.now()}`;
+    : `N1-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
 
 const buildContractQrUrl = (contractNumber: string) => {
-  const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'https://carsatlas.netlify.app';
-  return `${publicUrl.replace(/\/$/, '')}/signature/${encodeURIComponent(contractNumber)}`;
+  const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'https://n1luxcars.netlify.app';
+  return `${publicUrl.replace(/\/$/, '')}/verify?contract=${encodeURIComponent(contractNumber)}`;
 };
 
 const isSignatureImage = (value?: string) =>

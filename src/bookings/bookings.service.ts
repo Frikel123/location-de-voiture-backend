@@ -51,8 +51,8 @@ export class BookingsService {
 
   private buildContractNumber(bookingId: number) {
     const now = new Date();
-    const ymd = now.toISOString().slice(0, 10).replace(/-/g, '');
-    return `NC-${ymd}-${String(bookingId).padStart(5, '0')}`;
+    const year = now.getFullYear();
+    return `N1-${year}-${String(bookingId).padStart(5, '0')}`;
   }
 
   private buildContractToken(contractNumber: string) {
@@ -60,8 +60,8 @@ export class BookingsService {
   }
 
   private buildContractQrUrl(contractNumber: string) {
-    const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'http://192.168.1.8:8080';
-    return `${publicUrl.replace(/\/$/, '')}/signature/${encodeURIComponent(contractNumber)}`;
+    const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'https://n1luxcars.netlify.app';
+    return `${publicUrl.replace(/\/$/, '')}/verify?contract=${encodeURIComponent(contractNumber)}`;
   }
 
   private splitCarName(carName: string) {
@@ -111,9 +111,10 @@ export class BookingsService {
       reservationDeposit: 0,
       reservationTotalTTC: Number(booking.totalPrice ?? 0),
       reservationPaymentMethod: 'Esp\u00e8ces',
-      agencyName: 'NAYS CAR',
+      agencyName: 'N1 Lux Cars',
       agencyAddress: 'Casablanca, Maroc',
-      agencyPhone: '+212 6 00 00 00 00',
+      agencyPhone: '0646494968',
+      agencyWebsite: 'n1luxcars.netlify.app',
       insuranceName: 'Assurance tous risques',
       insurancePolicyNumber: '',
       insuranceIncluded: true,
