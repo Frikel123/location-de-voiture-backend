@@ -12,7 +12,7 @@ const buildContractToken = (contractNumber: string) =>
 
 const buildContractQrUrl = (contractNumber: string) => {
   const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'https://n1luxcars.netlify.app';
-  return `${publicUrl.replace(/\/$/, '')}/verify?contract=${encodeURIComponent(contractNumber)}`;
+  return `${publicUrl.replace(/\/$/, '')}/signature/${encodeURIComponent(contractNumber)}`;
 };
 
 const isSignatureImage = (value?: string) =>
