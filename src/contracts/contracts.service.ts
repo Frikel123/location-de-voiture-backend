@@ -10,9 +10,18 @@ const buildContractToken = (contractNumber: string) =>
     ? contractNumber.trim().replace(/[^a-zA-Z0-9-]/g, '-')
     : `N1-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
 
+const normalizeFrontendUrl = (value?: string) => {
+  if (!value) return undefined;
+  const trimmed = value.trim().replace(/\/$/, '');
+  if (/^[a-zA-Z][a-zA-Z\d+.-]*:\/\//.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+};
+
+const getFrontendPublicUrl = () => normalizeFrontendUrl(process.env.FRONTEND_PUBLIC_URL) || 'https://n1luxcars.netlify.app';
+
 const buildContractQrUrl = (contractNumber: string) => {
-  const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'https://n1luxcars.netlify.app';
-  return `${publicUrl.replace(/\/$/, '')}/signature/${encodeURIComponent(contractNumber)}`;
+  const publicUrl = getFrontendPublicUrl();
+  return `${publicUrl}/signature/${encodeURIComponent(contractNumber)}`;
 };
 
 const isSignatureImage = (value?: string) =>

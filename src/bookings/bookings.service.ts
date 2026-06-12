@@ -59,9 +59,20 @@ export class BookingsService {
     return contractNumber.trim().replace(/[^a-zA-Z0-9-]/g, '-');
   }
 
+  private normalizeFrontendUrl(value?: string) {
+    if (!value) return undefined;
+    const trimmed = value.trim().replace(/\/$/, '');
+    if (/^[a-zA-Z][a-zA-Z\d+.-]*:\/\//.test(trimmed)) return trimmed;
+    return `https://${trimmed}`;
+  }
+
+  private getFrontendPublicUrl() {
+    return this.normalizeFrontendUrl(process.env.FRONTEND_PUBLIC_URL) || 'https://n1luxcars.netlify.app';
+  }
+
   private buildContractQrUrl(contractNumber: string) {
-    const publicUrl = process.env.FRONTEND_PUBLIC_URL || 'https://n1luxcars.netlify.app';
-    return `${publicUrl.replace(/\/$/, '')}/signature/${encodeURIComponent(contractNumber)}`;
+    const publicUrl = this.getFrontendPublicUrl();
+    return `${publicUrl}/signature/${encodeURIComponent(contractNumber)}`;
   }
 
   private splitCarName(carName: string) {
